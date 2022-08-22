@@ -51,85 +51,84 @@
 // });
 // server.listen(3000);
 
-let users = [
-  {
-    id: 1,
-    name: "Ali",
-    email: "ali@gmail.com",
-  },
-  {
-    id: 2,
-    name: "Basit",
-    email: "basit@gmail.com",
-  },
-  {
-    id: 3,
-    name: "Zaid",
-    email: "zaid@gmail.com",
-  },
-];
-
 const express = require("express");
 const app = express();
+const mongoose = require("mongoose");
+const userRoute = require("./routes/userRoute.js");
+const cors = require("cors");
+
+mongoose.connect(
+  "mongodb+srv://BasitAhmed:Basit123456@cluster0.0ovf375.mongodb.net/?retryWrites=true&w=majority",
+  (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Mongo DB Connected Successfully");
+    }
+  }
+);
 
 app.use(express.json());
+app.use(cors());
 
-app.get("/users", (req, res) => {
-  res.send(users).status(200);
-});
+app.use("/user", userRoute);
 
-app.get("/users/:id", (req, res) => {
-  let obj = users.find((x) => x.id == req.params.id);
-  if (!obj) {
-    res.send("No Data Found").status(404);
-  } else {
-    res.send(obj).status(200);
-  }
-});
+// app.get("/users", (req, res) => {
+//   res.send(users).status(200);
+// });
 
-app.post("/users", (req, res) => {
-  let { name, email } = req.body;
+// app.get("/users/:id", (req, res) => {
+//   let obj = users.find((x) => x.id == req.params.id);
+//   if (!obj) {
+//     res.send("No Data Found").status(404);
+//   } else {
+//     res.send(obj).status(200);
+//   }
+// });
 
-  if (!name) {
-    res.send("Required: Name").status(400);
-    return;
-  }
+// app.post("/users", (req, res) => {
+//   let { name, email } = req.body;
 
-  if (!email) {
-    res.send("Required: Email").status(400);
-    return;
-  }
+//   if (!name) {
+//     res.send("Required: Name").status(400);
+//     return;
+//   }
 
-  let obj = {
-    name,
-    email,
-    dateTime: new Date(),
-    id: users.length + 1,
-  };
-  users.push(obj);
-  res.send(obj).status(200);
-});
+//   if (!email) {
+//     res.send("Required: Email").status(400);
+//     return;
+//   }
 
-app.put("/users/:id", (req, res) => {
-  let obj = users.find((x) => x.id == req.params.id);
-  if (!obj) {
-    res.send("Data Not Found").status(400);
-    return;
-  }
-  if (obj) {
-    let i = users.findIndex((x) => x.id == req.params.id);
-    users[i] = { ...users[i], ...req.body };
-    res.send(users[i]).status(200);
-    return;
-  }
-});
+//   let obj = {
+//     name,
+//     email,
+//     dateTime: new Date(),
+//     id: users.length + 1,
+//   };
+//   users.push(obj);
+//   res.send(obj).status(200);
+// });
 
-app.delete("/users/:id", (req, res) => {
-  let i = users.findIndex((x) => x.id == req.params.id);
-  if (i != -1) {
-    users.splice(i, 1);
-    res.send("successfully Deleted").status(200);
-  }
-});
+// app.put("/users/:id", (req, res) => {
+//   let obj = users.find((x) => x.id == req.params.id);
+//   if (!obj) {
+//     res.send("Data Not Found").status(400);
+//     return;
+//   }
+//   if (obj) {
+//     let i = users.findIndex((x) => x.id == req.params.id);
+//     users[i] = { ...users[i], ...req.body };
+//     res.send(users[i]).status(200);
+//     return;
+//   }
+// });
 
-app.listen(3000);
+// app.delete("/users/:id", (req, res) => {
+//   let i = users.findIndex((x) => x.id == req.params.id);
+//   if (i != -1) {
+//     users.splice(i, 1);
+//     res.send("successfully Deleted").status(200);
+//   }
+// });
+
+app.listen(5000);
